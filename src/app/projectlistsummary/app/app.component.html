@@ -2,7 +2,7 @@
   <img src="{{imagePath}}" class="ajax-loader" alt="Loading"/>
 </div>
 
-<div class="row full-row-gray-components" >
+<div class="row full-row-gray-components projects_summary" >
   <div class="container">
     <div *ngIf="total != 0; else nodata;">
       <div class="row">
@@ -33,7 +33,7 @@
       
       <div class="intro_paragraph" [ngClass]="{'display-none': !isFootNotes }">
               <div class="_loop_lead_paragraph_sm pull-left">
-                  <p class="disclaimer-text _loop_lead_paragraph_xs" *ngFor="let description of disclaimerText"  [innerHTML]="description"></p>
+                  <p class="disclaimer-text _loop_lead_paragraph_xs no-select" *ngFor="let description of disclaimerText"  [innerHTML]="description"></p>
               </div>
           </div>
       </div>

@@ -6,8 +6,8 @@
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                   <div class="page-title">
                       <ol class="breadcrumb_redesign">
-                          <li><a class="l1-breadcrumb" href="/en/what-we-do">What We Do</a></li>
-                          <li class="hidden-sm hidden-xs"><a class="l1-breadcrumb" href="/en/projects-operations/projects-home">Projects &amp; Operations</a></li>
+                          <li><a class="l1-breadcrumb" href="{{readcrumlink1}}">{{breadcrumtit1}}</a></li>
+                          <li class="hidden-sm hidden-xs"><a class="l1-breadcrumb" href="{{readcrumlink2}}">{{breadcrumtit2}}</a></li>
                       </ol>
                   </div>
               </div><!-- End Page Title -->
@@ -16,60 +16,57 @@
               <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                   
                   <!--START: Mobile language switch -->
+                 
+
                   <div class="lang-switch-mobile hidden-lg hidden-md">
                       <div class="page-langswitch " id="lang-click" style="cursor: pointer;">
                           <ul>
-                              <li><span>This page in: </span>
-                                  <span class="dropdown-toggle" aria-expanded="false">
+                              <li (click)="mobile()"><span> {{lnguageContent.content}} </span>
+                                  <span class="dropdown-toggle" >
                                       <span>
-                                          EN
+                                        {{lnguageContent.shortcode| uppercase}}
                                       </span>
                                       <span><!--<img src="/etc/designs/wbrrdesign/clientlibs-wbrredsign/img/angle-down.svg" />-->
-                                          <i class="icon icon-angle-down" style="cursor: pointer;"><span class="sr-only">dropdown</span></i>
+                                          <i class="icon icon-angle-down" style="cursor: pointer;" ><span class="sr-only">dropdown</span></i>
                                       </span>
                                   </span>
                               </li>
                           </ul>
                       </div>
-                      <div class="langswitch-dropdown float-right" id="lang-drop" style="display: none;">
+                      <div class="langswitch-dropdown float-right" id="lang-drop" [ngClass]="{'display-none': !isMobile }">
                           <ul class="dropdown-menu-right">
-                              
-                              <li><a href="https://aemprojects.worldbank.org/es/projects-operations/projects-home">Español</a></li>
-                              
-                              <li><a href="https://aemprojects.worldbank.org/fr/projects-operations/projects-home">Français</a></li>
-                              
-                              <li><a href="https://aemprojects.worldbank.org/ar/projects-operations/projects-home">العربية</a></li>
-                              
-                              <li><a href="https://aemprojects.worldbank.org/ru/projects-operations/projects-home">Русский</a></li>
-                              
-                              <li><a href="https://aemprojects.worldbank.org/zh/projects-operations/projects-home">中文</a></li>
-                              
-                              <li><a href="https://aemprojects.worldbank.org/pt/projects-operations/projects-home">Português</a></li>
-                              
+                            <ng-container *ngFor="let sortArr of lang; let i=index; let j=sortArr" >
+                                <li *ngIf="(i<=5)">
+                                    <a (click)="langSetting(sortArr.shortcode)"  >{{sortArr.lang}}</a>
+                                </li>
+                            </ng-container>
+                            
                           </ul>
                       </div>      
                   </div>
                   <!--END: Mobile language switch -->
-                  
-                  
                   <div class="lang-switch-desktop hidden-sm hidden-xs ">
-                      <!--START: desktop language switch -->
-                      <span class="page-in">This page in:<span class="space"></span></span>
-                      <ul>
-                          <li class="in-else"><a (click)="langSetting('en')">English</a></li>
-                              <li class="in-else"><a (click)="langSetting('es')">Español</a></li>
-                              <li class="in-else"><a (click)="langSetting('fr')">Français</a></li>
-                              <li class="in-else"><a (click)="langSetting('ar')">العربية</a></li>
-                              <li class="in-else"><a (click)="langSetting('ru')">Русский</a></li>
-                              <li class="in-else"><a (click)="langSetting('zh')">中文</a></li>
-                          <ul class="lang-dropdown" (click)="portugues()" id="more-language" [ngClass]="{'display-none': !isPortugues }">
-                              <li class="in-else"><a (click)="langSetting('pt')">Português</a></li>
+                    <!--START: desktop language switch -->
+                    <span class="page-in">{{lnguageContent.content}} <span class="space"></span></span>
+                    <ul>
+                        <li class="in-else">{{lnguageContent.lang}}</li>
+                        <ng-container *ngFor="let sortArr of lang; let i=index; let j=sortArr" >
+                         
+                            <li class="in-else"  *ngIf="(i<=4)">
+                                <a (click)="langSetting(sortArr.shortcode)"  >{{sortArr.lang}}</a>
+                            </li>
+                            
+                            <ul class="lang-dropdown"  [ngClass]="{'display-none': !isPortugues }" >
+                              <li class="in-else" *ngIf="(sortArr!='' && i==5)"><a (click)="langSetting(sortArr.shortcode)">{{sortArr.lang}}</a></li>
                           </ul>
-                      <li class="dropdown-link ">
-                          <a id="dropdown-more-language" ><i class="icon icon-angle-down"></i></a>
-                      </li>
-                      
-                  </ul></div>
+                       
+                          </ng-container>
+                          <li class="dropdown-link" (click)="portugues();">
+                            <a id="dropdown-more-language" ><i class="icon icon-angle-down"></i></a>
+                        </li>
+                    </ul>
+                  </div>
+                 
                   
                   <!--END: desktop anguage switch -->
                   
@@ -121,22 +118,52 @@
       </div>     
   </div>
 
-<div class="projects_tab parbase section">
+
+
+  
+<div class="projects_tab parbase section  " >
 <div class="">
   <div class="container">
-    <nav class="loop-tabs _loop_page_nav " id="wrap">
+    <nav class="loop-tabs _loop_page_nav" id="wrap" >
          <ul class="primary-tabs _loop_page_nav_list" id="dropdown-tab">
-      <li *ngIf="isprojdetails" class="_loop_nav_list_item"><a class="active" (click)="navigationRouting('summary',$event)" id="summary_top"   >{{summary}}</a></li> 
-            <li *ngIf="isprojdetails" class="_loop_nav_list_item"><a (click)="navigationRouting('procurement',$event)" id="procurement_top" >{{procurement}}</a></li> 
-            <li *ngIf="isprojdetails" class="_loop_nav_list_item"><a (click)="navigationRouting('documents',$event)"  id="documents_top" >{{documents}}</a></li> 
-            <li  *ngIf="isprojdetails" class="_loop_nav_list_item"><a  (click)="navigationRouting('news',$event)" id="news">{{news}}</a></li> 
-            <li  class="_loop_nav_list_item" *ngIf="summary_locale=='en'&&isprojdetails"><a  (click)="navigationRouting('photo',$event)" id="photo_top" >{{photo}}</a></li> 
+      <li *ngIf="isprojdetails" class="_loop_nav_list_item hidden-xs"><a class="active" (click)="navigationRouting('summary',$event)" id="summary_top"   >{{summary}}</a></li> 
+            <li *ngIf="isprojdetails" class="_loop_nav_list_item hidden-xs"><a (click)="navigationRouting('procurement',$event)" id="procurement_top" >{{procurement}}</a></li> 
+            <li *ngIf="isprojdetails" class="_loop_nav_list_item hidden-xs"><a (click)="navigationRouting('documents',$event)"  id="documents_top" >{{documents}}</a></li> 
+            <li  *ngIf="isprojdetails" class="_loop_nav_list_item hidden-xs"><a  (click)="navigationRouting('news',$event)" id="news">{{news}}</a></li> 
+            <li  class="_loop_nav_list_item hidden-xs" *ngIf="summary_locale=='en'&&isprojdetails"><a  (click)="navigationRouting('photo',$event)" id="photo_top" >{{photo}}</a></li> 
        
         <li *ngIf="!isprojdetails" class="_loop_nav_list_item"><a class="active" (click)="navigationRouting('projectsummary',$event)" id="projectsummary">{{summary}}</a></li> 
             <li *ngIf="!isprojdetails" class="_loop_nav_list_item"><a   (click)="navigationRouting('projectslist',$event)" id="projectslist">{{projectlist}}</a></li> 
           </ul>
         
     </nav>
+    
+
+    <div class="loop-tabsnav-components hidden-sm hidden-md hidden-lg" [ngClass]="{'display-none': !isprojdetails }">
+      <div class="">
+        <select class="form-control loop-tabsnav-mobile dropdown-toggle dropList" (change)="droplists()" [(ngModel)]="dropList">
+          <option class="loop-tabsnav-listitem"  value="1" *ngIf="isprojdetails"   selected>{{summary}}</option>
+          <option value="2" *ngIf="isprojdetails" >{{procurement}} </option>
+          <option value="3" *ngIf="isprojdetails" >{{documents}}</option>
+          <option value="4" *ngIf="isprojdetails" >{{news}} </option>
+          <option value="5" *ngIf="summary_locale=='en'&&isprojdetails"   > {{photo}}</option>
+        </select>
+        <!-- <button class="loop-tabsnav-mobile dropdown-toggle" type="button" id="loop-tabsbtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Home
+        </button>
+        <div class="loop-tabsmenu dropdown-menu" aria-labelledby="loop-tabsbtn">
+          <ul>
+              
+              <li *ngIf="isprojdetails" class="loop-tabsnav-listitem"><a class="active" (click)="navigationRouting('summary',$event)" id="summary_top"   >{{summary}}</a></li> 
+<li *ngIf="isprojdetails" class="loop-tabsnav-listitem"><a (click)="navigationRouting('procurement',$event)" id="procurement_top" >{{procurement}}</a></li> 
+<li *ngIf="isprojdetails" class="loop-tabsnav-listitem"><a (click)="navigationRouting('documents',$event)"  id="documents_top" >{{documents}}</a></li> 
+<li  *ngIf="isprojdetails" class="loop-tabsnav-listitem"><a  (click)="navigationRouting('news',$event)" id="news">{{news}}</a></li> 
+<li  class="loop-tabsnav-listitem" *ngIf="summary_locale=='en'&&isprojdetails"><a  (click)="navigationRouting('photo',$event)" id="photo_top" >{{photo}}</a></li> 
+
+          </ul>
+        </div> -->
+      </div>
+  </div>
     
        
      

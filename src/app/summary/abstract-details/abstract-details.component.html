@@ -1,165 +1,173 @@
 <div *ngIf="isResponse">
-  <section id="abstract" *ngIf="isAbstract">
-      <div class="row full-row-gray-components" style="padding:32px 0px 32px 0px;">
-          <div class="container">
-              <div class="row">
-                  <div class="heading-v1">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                          <h2>{{abstractLabel}}</h2>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-10 col-md-12 col-xs-12">
-                      <div class="redesign_static_content section">
-                          <div class="intro_paragraph">                            
-                              <div class="more _loop_lead_paragraph_sm">
-                                  {{abstract}}                                
-                                  <p class="disclaimer-text _loop_lead_paragraph_xs" [ngClass]="{'hide' : isShowMoreOrLess}" *ngFor="let disclaimer of disclaimerText" [innerHTML]="disclaimer"></p>   
-                                  <a (click)="onShowMoreOrLess(!isShowMoreOrLess)">{{showMoreOrLessLabel}} <i [ngClass]="showMoreOrLessIcon"></i></a>                                                                 
-                              </div>  
-                          </div>                          
-                      </div>                        
-                  </div>                                        
-              </div>
-          </div>
-      </div>
-  </section>
+    <section id="abstract" *ngIf="isAbstract">
+        <div class="row full-row-gray-components" style="padding:32px 0px 32px 0px;">
+            <div class="container">
+                <div class="row">
+                    <div class="heading-v1">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2>{{abstractLabel}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 col-md-12 col-xs-12">
+                        <div class="redesign_static_content section">
+                            <div class="intro_paragraph">                            
+                                <div class="more _loop_lead_paragraph_sm">
+                                    {{abstract}}                                
+                                    <p class="disclaimer-text _loop_lead_paragraph_xs" [ngClass]="{'hide' : isShowMoreOrLess}" *ngFor="let disclaimer of disclaimerText" [innerHTML]="disclaimer"></p>   
+                                    <a (click)="onShowMoreOrLess(!isShowMoreOrLess)">{{showMoreOrLessLabel}} <i [ngClass]="showMoreOrLessIcon"></i></a>                                                                 
+                                </div>  
+                            </div>                          
+                        </div>                        
+                    </div>                                        
+                </div>
+            </div>
+        </div>
+    </section>
 
 
-  <section id="development-objective" *ngIf="isDevObj">
-      <div class="row full-row-white-components" style="padding:32px 0px 32px 0px;">
-          <div class="container">
-              <div class="row">
-                  <div class="heading-v1">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                          <h2>{{devObjHeader}}</h2>
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-lg-10 col-md-12 col-xs-12">
-                      <div class="redesign_static_content section">
-                          <div class="intro_paragraph">                            
-                              <div class="more _loop_lead_paragraph_sm">
-                                  {{devobj}}                                
-                                                                                            
-                              </div>  
-                          </div>                          
-                      </div>                        
-                  </div>                                        
-              </div>
-          </div>
-      </div>
-  </section>
-
-  <section id="key-details">
-      <div class="row full-row-gray-components" style="padding: 32px 0px 32px 0px;">
-          <div class="container">
-              <div class="row">
-                  <div class="heading-v1">
-                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                          <h2>{{keyDetailsLabel}}</h2>
-                      </div>
-                  </div>                    
-              </div>
-              <div class="row">
-                  <div class="col-md-12 col-xs-12">
-                      <div class="detail-download-section">
-                          <div class="header-detail">
-                              <h4>{{projectDetailsLabel}}</h4>
-                          </div>
-                          <div class="main-detail">
-                              <ul class="row">
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{projectIdLabel}}</label>
-                                  <p class="document-info">{{projectId}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{statusLabel}}</label>
-                                  <p class="document-info">{{status}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{teamLeadersLabel}}</label>
-                                  <p class="document-info">{{teamLeaders}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{borrowerLabel}}</label>
-                                  <p class="document-info">{{borrower}}</p>
-                                  </li>
-                              </ul>
-                              <ul class="row">
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{countryNameLabel}}</label>
-                                  <p *ngIf="isCountry" class="document-info"><a href="{{countryPath}}">{{countryName}}</a></p>
-                                  <p *ngIf="!isCountry" class="document-info">{{countryName}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{approvalDateLabel}}</label>
-                                  <p class="document-info">({{boardPresentation}})</p>
-                                  <p class="document-info">{{approvalDate}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{totalProjectCostLabel}}</label>
-                                  <p class="document-info">{{totalProjectCost}}</p>                            
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{implementingAgencyLabel}}</label>
-                                  <p class="document-info">{{implementingAgency}}</p>
-                                  </li>
-                              </ul>
-                              <ul class="row">
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{regionNameLabel}}</label>
-                                  <p *ngIf="isRegion" class="document-info"><a href="{{regionPath}}"> {{regionName}}</a></p>
-                                  <p *ngIf="!isRegion" class="document-info">{{regionName}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{approvalYearLabel}}</label>
-                                  <p class="document-info">{{approvalYear}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{commitmentAmountLabel}}</label>
-                                  <p class="document-info">{{commitmentAmount}}</p>
-                                  </li>
-                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{environmentalCategoryLabel}}</label>
-                                  <p class="document-info">{{environmentalCategory}}</p>
-                                  </li>
-                              </ul>
-              
-                <ul class="row">
-                                <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{lastupdateDateLabel}}</label>
-                                  <p class="document-info">{{lastupdateDate}}</p>
-                                </li>
-                 <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                                  <label>{{closingDateLabel}}</label>
-                                  <p class="document-info">{{closingDate}}</p>
-                                  </li>
-                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="(projects?.cons_serv_reqd_ind)"> 
-                                  <label>{{consultantServiceLabel}}</label>
-                                  <p class="document-info">{{consultantService}}</p>
-                                </li>
+    <section id="development-objective" *ngIf="isDevObj">
+        <div class="row full-row-white-components" style="padding:32px 0px 32px 0px;">
+            <div class="container">
+                <div class="row">
+                    <div class="heading-v1">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2>{{devObjHeader}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-10 col-md-12 col-xs-12">
+                        <div class="redesign_static_content section">
+                            <div class="intro_paragraph">                            
+                                <div class="more _loop_lead_paragraph_sm">
+                                    {{devobj}}                                
+                                                                                              
+                                </div>  
+                            </div>                          
+                        </div>                        
+                    </div>                                        
+                </div>
+            </div>
+        </div>
+    </section>
+	
+    <section id="key-details">
+        <div class="row full-row-gray-components" style="padding: 32px 0px 32px 0px;">
+            <div class="container">
+                <div class="row">
+                    <div class="heading-v1">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2>{{keyDetailsLabel}}</h2>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="detail-download-section">
+                            <div class="header-detail">
+                                <h4>{{projectDetailsLabel}}</h4>
+                            </div>
+                            <div class="main-detail">
+                                <ul class="row">
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{projectIdLabel}}</label>
+                                    <p class="document-info">{{projectId}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{statusLabel}}</label>
+                                    <p class="document-info">{{status}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{teamLeadersLabel}}</label>
+                                    <p class="document-info">{{teamLeaders}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{borrowerLabel}}</label>
+                                    <p class="document-info">{{borrower}}</p>
+                                    </li>
                                 </ul>
-                              
-                              <ul class="row">
-                                  <li class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                      <div class="footnotes-section">
-                                      <a class="show-toggle" (click)="onFootNotes(!footNoteAnimation)">Footnotes</a>
-                                          <div class="intro_paragraph" [@footNoteFadeInOut]="footNoteAnimation">
-                                              <div class="_loop_lead_paragraph_sm">
-                                                  <p class="disclaimer-text _loop_lead_paragraph_xs" *ngFor="let description of descriptions" [innerHTML]="description"></p>
-                                              </div>
-                                          </div>
-                                      </div>
+                                <ul class="row">
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{countryNameLabel}}</label>
+                                    <p *ngIf="isCountry" class="document-info"><a href="{{countryPath}}">{{countryName}}</a></p>
+                                    <p *ngIf="!isCountry" class="document-info">{{countryName}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{approvalDateLabel}}</label>
+                                    <p class="document-info">({{boardPresentation}})</p>
+                                    <p class="document-info">{{approvalDate}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{totalProjectCostLabel}}</label>
+                                    <p class="document-info">{{totalProjectCost}}</p>                            
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{implementingAgencyLabel}}</label>
+                                    <p class="document-info">{{implementingAgency}}</p>
+                                    </li>
+                                </ul>
+                                <ul class="row">
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{regionNameLabel}}</label>
+                                    <p *ngIf="isRegion" class="document-info"><a href="{{regionPath}}"> {{regionName}}</a></p>
+                                    <p *ngIf="!isRegion" class="document-info">{{regionName}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{approvalYearLabel}}</label>
+                                    <p class="document-info">{{approvalYear}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{commitmentAmountLabel}}</label>
+                                    <p class="document-info">{{commitmentAmount}}</p>
+                                    </li>
+                                    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{environmentalCategoryLabel}}</label>
+                                    <p class="document-info">{{environmentalCategory}}</p>
+                                    </li>
+                                </ul>
+								
+								  <ul class="row">
+                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{lastupdateDateLabel}}</label>
+                                    <p class="document-info">{{lastupdateDate}}</p>
                                   </li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
+								   <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                    <label>{{closingDateLabel}}</label>
+                                    <p class="document-info">{{closingDate}}</p>
+                                    </li>
+								    <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="(projects?.cons_serv_reqd_ind)"> 
+                                    <label>{{consultantServiceLabel}}</label>
+                                    <p class="document-info">{{consultantService}}</p>
+                                  </li>
+                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="(projects?.last_stage_reached_name)"> 
+                                    <label>{{lastStageReachedLabel}}</label>
+                                    <p class="document-info">{{lastStageReached}}</p>
+                                  </li>
+                                  <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6" *ngIf="(projects?.parentprojid)"> 
+                                    <label>{{parentProjectLabel}}</label>
+                                    <p class="document-info"><a href="{{projectLink}}/{{parentProject}}">{{parentProject}}</a></p>
+                                  </li>
+                                  </ul>
+                                
+                                <ul class="row">
+                                    <li class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="footnotes-section">
+                                        <a class="show-toggle" (click)="onFootNotes(!footNoteAnimation)">Footnotes</a>
+                                            <div class="intro_paragraph" [@footNoteFadeInOut]="footNoteAnimation">
+                                                <div class="_loop_lead_paragraph_sm">
+                                                    <p class="disclaimer-text _loop_lead_paragraph_xs" *ngFor="let description of descriptions" [innerHTML]="description"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

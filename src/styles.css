@@ -4233,3 +4233,128 @@ header .navbar-nav .mega-menu .mega-menu-dropdown ul.tt-menu.show-tt-menu .tt-su
 .display-none{
   display: none;
 }
+
+@media (max-width: 649px) and (min-width: 320px) {
+    .tabs ul li + li {
+      margin-top: 0px !important;
+      float: none;
+      text-align: left; } }
+  
+  /*=== Begin New tab design ===*/
+  .loop-tabsnav-components {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+    text-transform: uppercase;
+    z-index: 2;
+    position: relative;
+    margin-top: -55px; }
+    .loop-tabsnav-components .loop-tabsnav-mobile {
+      width: 100%;
+      height: 40px;
+      border-radius: 0px;
+      text-align: left;
+      padding: 8px 16px 8px 16px;
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      -o-box-shadow: none;
+      color: #ffffff;
+      background-color: #0c5e9e;
+      border: 1px solid #0c5e9e;
+      border-radius: 0;
+      box-shadow: inset 0 3px 0 #0c5e9e; }
+      .loop-tabsnav-components .loop-tabsnav-mobile[aria-expanded=false]:after {
+        font-family: 'FontAwesome';
+        content: "\f107";
+        font-size: 18px;
+        line-height: 22px;
+        color: #ffffff;
+        margin-left: 4px;
+        float: right; }
+      .loop-tabsnav-components .loop-tabsnav-mobile[aria-expanded=true]:after {
+        font-family: 'FontAwesome';
+        content: "\f106";
+        font-size: 18px;
+        line-height: 22px;
+        color: #ffffff;
+        margin-left: 4px;
+        float: right; }
+    .loop-tabsnav-components .loop-tabsmenu {
+      background-color: #0c5e9e;
+      width: 100%;
+      border-radius: 0px;
+      margin: 1px 0px 0px 0px; }
+      .loop-tabsnav-components .loop-tabsmenu li {
+        padding: 8px 16px 8px 16px; }
+        .loop-tabsnav-components .loop-tabsmenu li a {
+          color: #fff;
+          display: block; }
+          .loop-tabsnav-components .loop-tabsmenu li a:hover {
+            color: #fff; }
+        .loop-tabsnav-components .loop-tabsmenu li:hover {
+          background-color: #004c92; }
+    @media (min-width: 768px) {
+      .loop-tabsnav-components {
+        margin-top: -46px; }
+        .loop-tabsnav-components .loop-tabsnav-mobile {
+          display: none; }
+        .loop-tabsnav-components .loop-tabsmenu {
+          display: block;
+          min-width: auto;
+          background-color: transparent;
+          padding: 0px;
+          margin: 0px;
+          border: 0px;
+          border-radius: 0px;
+          box-shadow: none;
+          z-index: 0;
+          float: left;
+          left: 0;
+          left: unset;
+          position: inherit;
+          text-align: left; }
+          .loop-tabsnav-components .loop-tabsmenu ul li {
+            padding: 0px;
+            display: inline-block;
+            text-align: center;
+            float: left;
+            position: relative;
+            color: #fff;
+            min-width: 150px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a000000', endColorstr='#1a000000',GradientType=0 ); }
+            .loop-tabsnav-components .loop-tabsmenu ul li a {
+              color: #fff;
+              padding: 12px 32px 12px 32px;
+              display: block; }
+              .loop-tabsnav-components .loop-tabsmenu ul li a:hover {
+                background-color: #004c92;
+                color: #fff; }
+              .loop-tabsnav-components .loop-tabsmenu ul li a.active {
+                background-color: #004c92;
+                cursor: default;
+                opacity: 1; }
+                .loop-tabsnav-components .loop-tabsmenu ul li a.active:hover {
+                  opacity: 1; }
+                .loop-tabsnav-components .loop-tabsmenu ul li a.active.disabled {
+                  pointer-events: none; }
+                .loop-tabsnav-components .loop-tabsmenu ul li a.active:after {
+                  content: "";
+                  border-style: dashed;
+                  border-color: transparent;
+                  border-width: .40em;
+                  display: -moz-inline-box;
+                  display: inline-block;
+                  font-size: 40px;
+                  height: 0;
+                  line-height: 0;
+                  position: absolute;
+                  left: 50%;
+                  top: 100%;
+                  margin-left: -15px;
+                  vertical-align: middle;
+                  width: 0;
+                  border-top-width: 0.30em;
+                  border-top-style: solid;
+                  border-top-color: #004c92; } }

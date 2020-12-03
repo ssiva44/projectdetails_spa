@@ -79,12 +79,14 @@ goToDetail(value) {
     this.commonservice.updateIsSummary(obj);
 }
 getprojectlist(){
-  debugger
+  
   let obj={
     searchTerm:"",
     summary_locale:this.locale,
-    list_project_list_api:this.projectDetailsPath
+    list_project_list_api:this.projectDetailsPath,
+    
   }
+ // window.location.href=window.location.origin+'/'+this.projectrouting
   this.route.navigate([this.projectrouting]);
   this.commonservice.updateSearchResults(obj);
 }

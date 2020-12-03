@@ -78,6 +78,7 @@ export class ProjectsListComponent {
     isLoading:boolean=false;
     isTotal:string;
     downloadAll:boolean = false;   
+    excelLimit: number;
     total: number;
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
@@ -129,8 +130,8 @@ export class ProjectsListComponent {
                     sector_exact : 'Sector',
                     theme_exact : 'Tema',
                     countryshortname_exact : 'País' ,
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                     
+                    cons_serv_reqd_ind_exact:'Servicios de consultoría requeridos',
+                    esrc_ovrl_risk_rate_exact:'Uso de riesgos ambientales y sociales'                                     
                 },               
                 refineBy : 'REFINAR POR',
                 filter : 'filtrar',
@@ -149,8 +150,8 @@ export class ProjectsListComponent {
                     sector_exact : 'Secteur',
                     theme_exact : 'Thème',
                     countryshortname_exact : 'Pays' ,
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                       
+                    cons_serv_reqd_ind_exact:'Services de consultants requis',
+                    esrc_ovrl_risk_rate_exact:'Utilisation des risques environnementaux et sociaux'                                       
                 },               
                 refineBy : 'FILTRER PAR',
                 filter : 'filtre',
@@ -169,8 +170,8 @@ export class ProjectsListComponent {
                     sector_exact : 'Setor',
                     theme_exact : 'Tema',
                     countryshortname_exact : 'País',
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                        
+                    cons_serv_reqd_ind_exact:'Serviços de consultoria necessários',
+                    esrc_ovrl_risk_rate_exact:'Uso de risco ambiental e social'                                       
                 },               
                 refineBy : 'FILTRAR POR',
                 filter : 'filtro',
@@ -189,8 +190,8 @@ export class ProjectsListComponent {
                     sector_exact : 'Сектор',
                     theme_exact : 'Тема',
                     countryshortname_exact : 'Страна' ,
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                       
+                    cons_serv_reqd_ind_exact:'Требуются услуги консультанта',
+                    esrc_ovrl_risk_rate_exact:'Использование экологических и социальных рисков'                                       
                 },               
                 refineBy : 'УТОЧНИТЬ ПО',
                 filter : 'Фильтр',
@@ -209,8 +210,8 @@ export class ProjectsListComponent {
                     sector_exact : 'القطاع',
                     theme_exact : 'محور التركيز',
                     countryshortname_exact : 'البلد' ,
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                      
+                    cons_serv_reqd_ind_exact:'مطلوب خدمات استشارية',
+                    esrc_ovrl_risk_rate_exact:'استخدام المخاطر البيئية والاجتماعي'                                     
                 },               
                 refineBy : 'التحديد حسب  ',
                 filter : 'منقي',
@@ -229,8 +230,8 @@ export class ProjectsListComponent {
                     sector_exact : '部门',
                     theme_exact : '主题',
                     countryshortname_exact : '国家' ,
-                    cons_serv_reqd_ind_exact:'Consultant Services Required',
-                    esrc_ovrl_risk_rate_exact:'Environmental and Social Risk Use'                                       
+                    cons_serv_reqd_ind_exact:'需要顧問服務',
+                    esrc_ovrl_risk_rate_exact:'環境和社會風險使用'                                       
                 },                
                 refineBy : '重新定义',
                 filter : '过滤',
@@ -289,7 +290,7 @@ initialPage(txt,val:any){
     if(locales==undefined || locales==""){
         locales="en";
     }
-    
+    debugger
     if(this.projectsApi==undefined){
         this.projectsApi=val.list_project_list_api;
     }

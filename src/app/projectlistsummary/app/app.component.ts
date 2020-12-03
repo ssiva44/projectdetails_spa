@@ -96,7 +96,7 @@ export class ProjectAppComponent implements OnInit {
     
     commonservice.changeClosingallStatus.subscribe((val:any) => {
       if (val) {
-      debugger;
+      
       this.loading = true;
   this.imagePath = val.summary_imagePath;
   this.locale = val.summary_locale;

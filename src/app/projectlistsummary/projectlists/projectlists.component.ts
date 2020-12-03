@@ -17,8 +17,8 @@ export class ProjectlistsComponent implements OnInit {
    apiResponse: any;
    total: any;
    @Input() searchTerm:string;
-  @Input() projectrouting:string
-  @Input() summaryrouting:string
+  
+
   @Input() buttonLink:string;
   @Input() projectDetailsPath:string;
   @Input() apiUrl:string;
@@ -45,7 +45,7 @@ export class ProjectlistsComponent implements OnInit {
     })
   }
   initialPage(txtsearch){
-    debugger
+    
     let txtvalue=txtsearch;
     let url = this.apiUrl;
     let currentUrl = window.location.href;
@@ -66,32 +66,10 @@ export class ProjectlistsComponent implements OnInit {
         locale=this.locale
       }
     url = url + '&apilang=' + this.locale + '&' + parameters;
-    // if(val.response!=undefined&& val.response!=""){
-    //   debugger
-    //   if(this.locale!=undefined){
-    //     locale=this.locale
-    //   }else{
-    //     locale=val.summary_locale;
-    //   }
-    //   this.apiResponse = val.response;
-    //   let obj={
-    //     response:val.response,
-    //     locale:locale
-    //   }
-    //   this.commonservice.updatesearchSummaryResults(obj);
-    //   this.loading = false;
-    //   this.total = this.apiResponse.total;
-    // }
-    // else{
+    
       this.http.post(url,'').subscribe((response)=> {
-        localStorage.setItem('listSummary', JSON.stringify({ response: response }));
-        // let locale="";
-        // debugger
-        // if(this.locale!=undefined){
-        //   locale=this.locale
-        // }else{
-        //   locale=val.summary_locale;
-        // }
+        //localStorage.setItem('listSummary', JSON.stringify({ response: response }));
+        
         this.apiResponse = response;
         let obj={
           response:response,

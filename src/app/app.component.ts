@@ -5,6 +5,7 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { PlatformLocation,Location } from '@angular/common';
 import { ProjectsListComponent } from './projectlist/projects-list/projects-list.component';
 import { ProjectAppComponent } from './projectlistsummary/app/app.component';
+import { stringify } from 'querystring';
 @Component({
   selector: 'projectsall',
   templateUrl: './app.component.html',
@@ -35,7 +36,7 @@ export class AppComponent {
   summary_projectListPath: string;
   summary_procurementResponse: any;
   summary_lendingResponse: any;
-
+  dropList:any="1";
   procurement_imagePath: string;
   procurement_locale: string;
   procurement_domain: string;
@@ -82,12 +83,14 @@ summary_projectresponse:string;
 projectlist_routing:string;
 issummary:boolean=false;
 isprojdetails:boolean=false;
-
+htmltext:string;
+isMobile:boolean=false;
 list_project_list_api:string;
       list_project_details_page:string;
       list_excel_file:string;
       list_download_excel:string;
-
+      list_summary_path:string;  
+     list_routing_path:string;
 abstract: string;
   keyDetails: string;
   finances: string;
@@ -105,6 +108,7 @@ abstract: string;
   runmode:string;
   list_summary_routing:string;
   list_routing:string;
+  runmode_text:string;
   domain_en:string;
   domain_es:string;
   domain_pt:string;
@@ -112,35 +116,142 @@ abstract: string;
   domain_ar:string;
   domain_fr:string;
   domain_ru:string;
+  summary_path:string;
+  procurement_path:string;
+  document_path:string;
+  newsmedia_path:string;
+  photogallery_path:string;
+  lnguageContent: any;
+  breadcrumtit1:string="";
+      breadcrumtit2:string="";
+      readcrumlink1:string="";
+      readcrumlink2:string="";
+      language:any={};
+      lang:any=[];
+      domain_author:string="";
   constructor(private element: ElementRef,private commonservice:CommonService,
     private http:HttpClient,private routing:Router,private locations:Location,
     private location: PlatformLocation,private route:ActivatedRoute) { 
-      debugger;  
+      
    this.initial(routing,location,"first");
   }
 
   initial(routing,location,firstTxt){
-    debugger;
+  
     this.summary_imagePath = this.element.nativeElement.getAttribute('imagePath'); 
     this.summary_projectApi = this.element.nativeElement.getAttribute('summary-project-api');
     //this.summary_procurementApi = this.element.nativeElement.getAttribute('summary-procurement-api');
     this.summary_mapPath = this.element.nativeElement.getAttribute('summary-mapPath');
     this.summary_projectCode = this.element.nativeElement.getAttribute('projectCode');
-    if(firstTxt=="first") {
-    
-      this.summary_locale = this.element.nativeElement.getAttribute('locale');
-      this.list_summary_routing= this.element.nativeElement.getAttribute('list-summary-routing');
-      this.list_routing= this.element.nativeElement.getAttribute('list-routing');
-      this.summary_routing = this.element.nativeElement.getAttribute('summary-routing');  
-      this.procurement_routing = this.element.nativeElement.getAttribute('procurement-routing');  
-      this.document_routing = this.element.nativeElement.getAttribute('document-routing');  
-      this.newsmedia_routing = this.element.nativeElement.getAttribute('newsmedia-routing');  
-      this.photogallery_routing = this.element.nativeElement.getAttribute('photogallery-routing');
+    this.runmode= this.element.nativeElement.getAttribute('runmode');
+   this.summary_locale = this.element.nativeElement.getAttribute('locale');
+   this.domain_author = this.element.nativeElement.getAttribute('domain-author');
 
+   if(window.location.pathname.indexOf('projects-list')==-1 && window.location.pathname.indexOf('projects-summary')==-1){
+     let code=window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+    
+     let codeSplit=[];
+     let output:any;
+     this.isprojdetails=true; 
+     if(this.runmode=='author'){
+      codeSplit = code.split('.');
+      output = codeSplit[1];
+     
+     }else{
+      output = code;
+     }
+     this.summary_projectCode=output;
+     
+    }
+   console.log(this.summary_projectCode)
+    // if(this.summary_projectCode==undefined){
+    //   let projectcode =  localStorage.getItem('projectcode');
+     
+    //   if(projectcode!=undefined && projectcode.indexOf('projectcode')==-1 ){
+    //     this.summary_projectCode = projectcode;
+       
+    //   }
+    // }
+    let qterms=this.getQterm();
+    if(qterms!=""){
+      this.txtSearch = qterms;
+    }
+    
+    let summarydetail = "";
       
-    }         
-   
+      if(this.runmode=='author'){
+        this.runmode_text="content/wb-home/";
+        this.htmltext=".html";
+        summarydetail= '.'+this.summary_projectCode+'.html';
+      }else{
+        this.runmode_text="";
+        this.htmltext="";
+        summarydetail= '/'+this.summary_projectCode;
+      }
+      this.language = {
+        'en': {
+            content: 'This page in: ',
+            lang: 'English',
+            shortcode:'en'
+        },
+        'es': {
+            content: 'Esta página en: ',
+            lang: 'Español',
+            shortcode:'es'
+        },
+        'fr': {
+          content: 'Cette page en:',
+          lang: 'Français',
+          shortcode:'fr'
+      },
+      'ar': {
+        content: 'الصفحة باللغة: ',
+        lang: 'العربية',
+        shortcode:'ar'
+    },
+    'ru': {
+      content: 'Язык страницы:',
+      lang: 'Русский',
+      shortcode:'ru'
+  },
+      'zh': {
+        content: '版本: ',
+        lang: '中文',
+        shortcode:'zh'
+    },
+    'pt': {
+      content: 'Esta página em: ',
+      lang: 'Português',
+      shortcode:'pt'
+  }
+      }
       
+
+      Object.values(this.language).forEach((element:any) => {
+        
+        if(element.shortcode!=this.summary_locale){
+          this.lang.push(element);
+        }
+      });
+      this.lnguageContent = this.language[this.summary_locale];
+
+      this.list_summary_routing= this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('list-summary-routing')+this.htmltext;
+      this.list_routing= this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('list-routing')+this.htmltext;
+      this.summary_routing = this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('summary-routing')+summarydetail;  
+      this.procurement_routing = this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('procurement-routing')+summarydetail;  
+      this.document_routing = this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('document-routing')+summarydetail;  
+      this.newsmedia_routing = this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('newsmedia-routing')+summarydetail;  
+      this.photogallery_routing = this.runmode_text+this.summary_locale+this.element.nativeElement.getAttribute('photogallery-routing')+summarydetail;
+
+      this.summary_path = this.element.nativeElement.getAttribute('summary-routing');  
+      this.procurement_path = this.element.nativeElement.getAttribute('procurement-routing');  
+      this.document_path = this.element.nativeElement.getAttribute('document-routing');  
+      this.newsmedia_path = this.element.nativeElement.getAttribute('newsmedia-routing');  
+      this.photogallery_path = this.element.nativeElement.getAttribute('photogallery-routing');
+
+      this.list_summary_path = this.element.nativeElement.getAttribute('list-summary-routing');  
+      this.list_routing_path = this.element.nativeElement.getAttribute('list-routing');
+
         if(routing.config!=undefined){
           routing.config.forEach((query:any) => {
     
@@ -176,7 +287,7 @@ abstract: string;
           });
         }
         routing.resetConfig(routing.config);
-    this.runmode= this.element.nativeElement.getAttribute('runmode');
+  
     this.domain_en= this.element.nativeElement.getAttribute('domain-en');
     this.domain_es= this.element.nativeElement.getAttribute('domain-es');
     this.domain_pt= this.element.nativeElement.getAttribute('domain-pt');
@@ -184,34 +295,6 @@ abstract: string;
     this.domain_ar= this.element.nativeElement.getAttribute('domain-ar');
     this.domain_fr= this.element.nativeElement.getAttribute('domain-fr');
     this.domain_ru= this.element.nativeElement.getAttribute('domain-ru');
-    //localStorage.setItem('locale', JSON.stringify({ locale: this.summary_locale}));
-   
-    //this.projectlist_routing=this.element.nativeElement.getAttribute('projectlist-routing');
-    //this.projectlistsummary_routing=this.element.nativeElement.getAttribute('projectlistsummary-routing');
-    // let langPath=[];
-    // debugger
-    // let path="";
-    // let locale="";
-    // if(window.location.pathname!=undefined && window.location.pathname.length>1){
-    //   debugger
-    //    langPath=this.getLangualge();
-    //    if(langPath!=undefined){
-    //     // path= langPath[0].path;
-    //     // locale= langPath[0].locale;
-    //     if(this.runmode=="author"){
-    //       path = "content/wb-home/"+langPath[0].locale+langPath[0].path;
-    //      }else{
-    //       path=langPath[0].locale+langPath[0].path;;
-    //      }
-        
-    //     if (window.location.pathname.indexOf('projects-summary') != -1) {
-    //       this.list_summary_routing=locale+path;
-    //     }else if (window.location.pathname.indexOf('projects-list') != -1) {
-    //       this.list_routing=locale+path;
-    //     }
-    //    }
-    // }
-    
 
     this.allLocales = {
       en : {
@@ -341,20 +424,15 @@ abstract: string;
   // ||window.location.pathname.indexOf(this.photogallery_routing)!=-1){
   //   this.summary_projectCode=window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
   // }
+  this.breadcum();
    let summarydetails="";
-  // if(this.summary_projectCode!=undefined && this.summary_projectCode!=""){
-
-  // }
- 
     this.newsmedia_imagePath = this.element.nativeElement.getAttribute('imagePath'); 
     this.newsmedia_projectCode = this.element.nativeElement.getAttribute('projectCode');
     this.newsmedia_languageCode = this.element.nativeElement.getAttribute('locale');    
     this.newsmedia_url = this.element.nativeElement.getAttribute('newsmedia-news-media-api');
     this.newsmedia_multimediaApi = this.element.nativeElement.getAttribute('newsmedia-multimedia-api'); 
     let url = this.summary_projectApi + '&id=' + this.summary_projectCode + '&apilang=' + this.summary_locale;
-          this.getProjectName(this.summary_projectCode);
-
-
+     this.getProjectName(this.summary_projectCode);
     this.procurement_imagePath = this.element.nativeElement.getAttribute('imagePath');
 		this.procurement_locale = this.element.nativeElement.getAttribute('locale');
 		this.procurement_domain = this.element.nativeElement.getAttribute('procurement-domain');
@@ -400,7 +478,7 @@ abstract: string;
       procurement_imagePath:this.procurement_imagePath,
       procurement_locale:this.summary_locale,
       procurement_domain:this.procurement_domain,
-      procurement_projectId:this.procurement_projectId,
+      procurement_projectId:this.summary_projectCode,
       procurement_noticesApiUrl:this.procurement_noticesApiUrl,
       procurement_contractsApiUrl:this.procurement_contractsApiUrl,
       procurement_planApiUrl:this.procurement_planApiUrl,
@@ -408,16 +486,16 @@ abstract: string;
       document_locale:this.summary_locale,
       document_projectsApiUrl:this.document_projectsApiUrl,
       document_archivalApiUrl:this.document_archivalApiUrl,
-      document_projectid:this.document_projectid,
+      document_projectid:this.summary_projectCode,
       document_tabType:this.document_tabType,
       newsmedia_imagePath:this.newsmedia_imagePath,
-      newsmedia_projectCode:this.newsmedia_projectCode,
+      newsmedia_projectCode:this.summary_projectCode,
       newsmedia_languageCode:this.newsmedia_languageCode,
       newsmedia_url:this.newsmedia_url,
       newsmedia_multimediaApi:this.newsmedia_multimediaApi,
       photo_imagePath :this.photo_imagePath,
    photo_peopleImage:this.photo_peopleImage,
-    photo_projectCode:this.photo_projectCode,
+    photo_projectCode:this.summary_projectCode,
     photo_languageCode:this.summary_locale,   
     photo_projects_photo_gallery_api:this.photo_projects_photo_gallery_api,
     photo_details_path:this.photo_details_path, 
@@ -445,15 +523,17 @@ abstract: string;
     }
     this.commonservice.closingStatusallUpdated(objProject);
     this.isBack=false;
-   
   this.commonservice.changeIsSummary.subscribe((val:any) => {
-    debugger;  
+      
     if(val.isProj==true){
-      objProject.summary_projectCode=val.value;
-      objProject.photo_projectCode=val.value;
-      objProject.newsmedia_projectCode=val.value;
-      objProject.document_projectid=val.value;
-      objProject.procurement_projectId=val.value;
+      
+        objProject.summary_projectCode=val.value;
+        objProject.photo_projectCode=val.value;
+        objProject.newsmedia_projectCode=val.value;
+        objProject.document_projectid=val.value;
+        objProject.procurement_projectId=val.value;
+      
+      localStorage.setItem('projectcode', val.value);
       let summarydetail="";
       if(this.runmode=='author'){
         summarydetail = '.'+objProject.summary_projectCode+'.html';
@@ -468,72 +548,101 @@ abstract: string;
   
           if(query.loadChildren!=undefined){
             if(query.loadChildren.indexOf('summary')!=-1){
-              query.path = this.summary_routing+summarydetail;
+              query.path = this.runmode_text+this.summary_locale+this.summary_path+summarydetail;
             }
             if(query.loadChildren.indexOf('procurement')!=-1){
-              query.path = this.procurement_routing+summarydetail
+              query.path = this.runmode_text+this.summary_locale+this.procurement_path+summarydetail
             }
             if(query.loadChildren.indexOf('documents')!=-1){
-              query.path = this.document_routing+summarydetail;
+              query.path = this.runmode_text+this.summary_locale+this.document_path+summarydetail;
             }
             if(query.loadChildren.indexOf('newsmedia')!=-1){
-              query.path = this.newsmedia_routing+summarydetail;
+              query.path = this.runmode_text+this.summary_locale+this.newsmedia_path+summarydetail;
             }
             if(query.loadChildren.indexOf('photogallery')!=-1){
-              query.path = this.photogallery_routing+summarydetail;
+              query.path = this.runmode_text+this.summary_locale+this.photogallery_path+summarydetail;
             }
-            
            
           }
           if(query.pathMatch!=undefined){
             if(query.pathMatch.indexOf('full')!=-1){
-              query.redirectTo=this.summary_routing+summarydetail;
+              query.redirectTo=this.runmode_text+this.summary_locale+this.summary_path+summarydetail;
             }
           }
         });
       }
       routing.resetConfig(routing.config);
       this.commonservice.closingStatusallUpdated(objProject);
-      this.routing.navigate([this.summary_routing+summarydetail]);
-      //this.redirectTo(this.summary_routing+'/'+val.value);
+      if(!this.isBack){
+        this.routing.navigate([this.runmode_text+this.summary_locale+this.summary_path+summarydetail]);
+      }
+      //this.routing.navigate([this.runmode_text+this.summary_locale+this.summary_path+summarydetail]);
+      this.dropList="1";
+      this.isprojdetails=true; 
       
+    }
+  });
+  this.load();
+  setTimeout(() => {
+    if(window.location.pathname.indexOf('projects-list')==-1 && window.location.pathname.indexOf('projects-summary')==-1){
       this.isprojdetails=true; 
     }else{
       this.isprojdetails=false; 
     }
-   
-  });
-  location.onPopState(() => {
-    //this.isBack=true;
-    // alert();
-     this.load();
-});
+  }, 1000);
+  this.isBack=false;
+  
   }
+  returnValues(obj) {
+  //  console.log(Object.values(obj));
+  let shordcode:any;
+  shordcode=Object.values(obj);
+    if(this.lnguageContent.shortcode!=shordcode.shortcode){
+      return Object.values(obj);
+    }else{
+      return "";
+    }
+   
 
+   // return (obj && (Object.values(obj).length === 0));
+}
+isEmptyObject(obj) {
+  return (obj && (Object.keys(obj).length === 4));
+}
+  breadcum(){
+    let readcrum="";
+      if(this.runmode=='author'){
+        readcrum = '.html';
+      }else{
+        readcrum= '';
+      }
+    let breadcrumtit = this.element.nativeElement.getAttribute('breadcrumbtit');  
+    let breadcrumblink = this.element.nativeElement.getAttribute('breadcrumblink');
+    if(breadcrumtit!=undefined){
+      breadcrumtit = breadcrumtit.split("||");
+      if(breadcrumtit!=undefined){
+        this.breadcrumtit1= breadcrumtit[0];
+      }
+      if(breadcrumtit!=undefined){
+        this.breadcrumtit2= breadcrumtit[1];
+      }
+    }
+    if(breadcrumblink!=undefined){
+      breadcrumblink = breadcrumblink.split("||");
+      if(breadcrumblink!=undefined){
+        this.readcrumlink1= breadcrumblink[0]+readcrum;
+      }
+      if(breadcrumtit!=undefined){
+        this.readcrumlink2= breadcrumblink[1]+readcrum;
+      }
+    }
+  }
   portugues(){
+    
       this.isPortugues=!this.isPortugues;
   }
-  getSummaryPath(){
-    let lasindexpath="";
-    if(this.runmode=='author'){
-      lasindexpath = '.'+this.summary_projectCode+'.html';
-    }else{
-      lasindexpath = '/'+this.summary_projectCode;
-    }
-    return lasindexpath
-  }
-  getListPath(txt){
-    let lasindexpath="";
-    if(this.runmode=='author'){
-      if(txt=="summary"){
-        lasindexpath = this.list_summary_routing;
-      }else{
-        lasindexpath = this.list_routing;
-      }
-    }else{
-      lasindexpath = "";
-    }
-    return lasindexpath
+  mobile(){
+    this.isMobile=!this.isMobile;
   }
  getProjectName(id){
   let url = this.summary_projectApi + '&id=' + id + '&apilang=' + this.summary_locale;
@@ -543,22 +652,12 @@ abstract: string;
   })
  }
   ngOnInit(){
-    this.load();
-    let qterm=this.getQterm();
-    //   if (window.location.pathname.indexOf('projects-summary') != -1) {
-    //   if(qterm!=""){
-    //     this.getSummarylist(qterm,"");
-    //   }else{
-    //     this.routing.navigate([this.list_summary_routing]);
-    //   }
-    // }else  if (window.location.pathname.indexOf('projects-list') != -1) {
-    //   if(qterm!=""){
-    //     this.getProjectlist(qterm,"");
-    //   }else{
-    //     this.routing.navigate([this.list_routing]);
-    //   }
-    // }
-    //this.load();
+    this.location.onPopState(() => {
+      
+      this.isBack=true;
+        this.load();
+     // history.back();
+  });
     $(window).scroll(function(){
       if ($(window).scrollTop() >= 300) {
          $('#subnav_section').addClass('fixed-header');
@@ -569,269 +668,160 @@ abstract: string;
   });
   }
   ngOnChanges() {
-   
-    
   }
 
-summaryUpdateLang(txt){
-  debugger
-    let summary_routing:any;
-    let procurement_routing:any;
-    let document_routing:any;
-    let newsmedia_routing:any;
-    let photogallery_routing:any;
-    let summary_routingPath=[];
-    let procurement_routingPath=[];
-    let document_routingPath=[];
-    let newsmedia_routingPath=[];
-    let photogallery_routingPath=[];
-    let summarydetails="";
-    if(this.routing.config!=undefined){
-     summary_routingPath=this.getdetails(this.routing.config[0].path);
-     procurement_routingPath=this.getdetails(this.routing.config[1].path);
-     document_routingPath=this.getdetails(this.routing.config[2].path);
-     newsmedia_routingPath=this.getdetails(this.routing.config[3].path);
-     photogallery_routingPath=this.getdetails(this.routing.config[4].path);
-    }
+  getLangualge(path:any){
+  
+    let UrlPath=[];
+    //let language=['en','es','fr','ar','ru','zh','pt'];
     
     if(this.runmode=="author"){
-      summarydetails = '.'+this.summary_projectCode+'.html';
-      if(summary_routingPath!=undefined && summary_routingPath[0].path!=undefined){
-        summary_routing = "content/wb-home/"+txt+summary_routingPath[0].path
-      }
-      if(procurement_routingPath!=undefined && procurement_routingPath[0].path!=undefined){
-        procurement_routing="content/wb-home/"+txt+procurement_routingPath[0].path
-      }
-      if(document_routingPath!=undefined && document_routingPath[0].path!=undefined){
-        document_routing="content/wb-home/"+txt+document_routingPath[0].path
-      }
-      if(newsmedia_routingPath!=undefined && newsmedia_routingPath[0].path!=undefined){
-        newsmedia_routing="content/wb-home/"+txt+newsmedia_routingPath[0].path
-      }
-      if(photogallery_routingPath!=undefined && photogallery_routingPath[0].path!=undefined){
-        photogallery_routing="content/wb-home/"+txt+photogallery_routingPath[0].path
-      }
+      let urlSplit="";
+      let finalSplit=[]
+      urlSplit= path.split('content/wb-home/')[1]
+      let urlSplits = urlSplit.split('/');
+      let locales=window.location.pathname.split('content/wb-home/')[1]
+        let localeSplit = locales.split('/');
+      finalSplit=path.split('content/wb-home/'+urlSplits[0]);
+     // finalSplit = finalSplit[1].substring(finalSplit[1].lastIndexOf('/') + 1)
+      UrlPath.push({
+        locale:localeSplit[0],
+        path:finalSplit[1]});
     }else{
-      summarydetails = '/'+this.summary_projectCode;
-      if(summary_routingPath!=undefined && summary_routingPath[0].path!=undefined){
-        summary_routing=txt+summary_routingPath[0].path;
-        
-      }
-      if(procurement_routingPath!=undefined && procurement_routingPath[0].path!=undefined){
-        procurement_routing=txt+procurement_routingPath[0].path;
-     }
-     if(document_routingPath!=undefined && document_routingPath[0].path!=undefined){
-      document_routing=txt+document_routingPath[0].path;
-     }
-     if(newsmedia_routingPath!=undefined){
-      newsmedia_routing=txt+newsmedia_routingPath[0].path;
-     }
-     if(photogallery_routingPath!=undefined){
-      photogallery_routing=txt+photogallery_routingPath[0].path;
-     }
+      let urlSplit=[];
+      let localeSplit=[];
+      let urlSplits=[];
+      urlSplit=path.split('/');
+      localeSplit=window.location.pathname.split('/');
+   //   if(urlSplit.length>0){
+        urlSplits = path.split('/'+urlSplit[1]);
+    //  }
+      UrlPath.push({
+        locale:localeSplit[1],
+        path:urlSplits[1]});
+      
     }
-    this.summary_routing = summary_routing;  
-    this.procurement_routing = procurement_routing;  
-    this.document_routing = document_routing;  
-    this.newsmedia_routing = newsmedia_routing;  
-    this.photogallery_routing = photogallery_routing;
-
-    if(this.routing.config!=undefined){
-      this.routing.config.forEach((query:any) => {
-
-        if(query.loadChildren!=undefined){
-          if(query.loadChildren.indexOf('summary')!=-1){
-            query.path = summary_routing+summarydetails;
-          }
-          if(query.loadChildren.indexOf('procurement')!=-1){
-            query.path = procurement_routing+summarydetails;
-          }
-          if(query.loadChildren.indexOf('documents')!=-1){
-            query.path = document_routing+summarydetails;
-          }
-          if(query.loadChildren.indexOf('newsmedia')!=-1){
-            query.path = newsmedia_routing+summarydetails;
-          }
-          if(query.loadChildren.indexOf('photogallery')!=-1){
-            query.path = photogallery_routing+summarydetails;
-          }
-          
-         
-        }
-        if(query.pathMatch!=undefined){
-          if(query.pathMatch.indexOf('full')!=-1){
-            query.redirectTo=summary_routing;
-          }
-        }
-      });
+     return UrlPath;
+  }
+  
+  
+  getdetails(path:any){
+    debugger
+    let UrlPath=[];
+    if(this.runmode=="author"){
+      let urlSplit="";
+      let finalSplit=[]
+      urlSplit= path.split('content/wb-home/')[1]
+      let urlSplits = urlSplit.split('/');
+      let locales=window.location.pathname.split('content/wb-home/')[1]
+      let localeSplit = locales.split('/');
+      finalSplit=path.split('content/wb-home/'+urlSplits[0]);
+      let localeSplits = finalSplit[1].split('.');
+      UrlPath.push({
+        locale:localeSplit[0],
+        path:localeSplits[0]});
+    }else{
+      let urlSplit=[];
+      let localeSplit=[];
+      urlSplit=path.split('/');
+      localeSplit=window.location.pathname.split('/');
+      let urlSplits = path.split('/'+urlSplit[1]);
+      
+      UrlPath.push({
+        locale:localeSplit[1],
+        path:urlSplits[1]});
     }
-    this.routing.resetConfig(this.routing.config);
-}
-
+    
+     return UrlPath;
+  }
   langSetting(txt){
-    
-    let langPath:any;
-    if(window.location.pathname.indexOf('projects-list')==-1 && window.location.pathname.indexOf('projects-summary')==-1){
-      langPath=this.getdetails(window.location.pathname);
-    }else{
-      langPath=this.getLangualge(window.location.pathname);
-    }
-    
-    let lang:any;
-    let listRouting:any;
-    let listSummaryRouting:any;
     debugger
-    let listPath=this.getLangualge(this.list_routing);
-   let listSummaryPath=this.getLangualge(this.list_summary_routing);
-   if(this.runmode=="author"){
-     debugger
+   let langPath:any;
+   let details:string;
+   let summarydetail="";
+      if(this.runmode=='author'){
+        summarydetail = '.'+this.summary_projectCode+'.html';
+      }else{
+        summarydetail= '';
+      }
+   if((window.location.pathname.indexOf('projects-list')==-1) && (window.location.pathname.indexOf('projects-summary')==-1)){
+     langPath=this.getdetails(window.location.pathname);
      if(langPath!=undefined){
-      lang = "content/wb-home/"+txt+langPath[0].path;
+       details = langPath[0].path+summarydetail;
      }
-     if(listPath!=undefined){
-      listRouting="content/wb-home/"+txt+listPath[0].path;
-     }
-     if(listSummaryPath!=undefined ){
-        listSummaryRouting="content/wb-home/"+txt+listSummaryPath[0].path;
-     }
+     
    }else{
-    if(langPath!=undefined && langPath[0].path!=undefined){
-       lang=txt+langPath[0].path;
-    }
-    if(listPath!=undefined && listPath[0].path!=undefined){
-      listRouting=txt+listPath[0].path;
-    }
-    if(listSummaryPath!=undefined && listSummaryPath[0].path!=undefined){
-      listSummaryRouting=txt+listSummaryPath[0].path;
-    }
+     
+      langPath=this.getLangualge(window.location.pathname);
+      if(langPath!=undefined){
+       details = langPath[0].path;
+     
+     }
+     
    }
+
+
+
    
-   this.summary_locale=txt;
-   this.list_routing = listRouting;
-   this.list_summary_routing=listSummaryRouting;
-   this.summaryUpdateLang(txt);
-   //window.history.pushState({urlPath:lang}, "",this.domain_en+lang);
-   this.initial(this.routing,this.location,"second");
-   //this.ngOnInit();
-   debugger
-  //setTimeout(() => {
-  //    debugger
-  //    //window.history.replaceState('','',lang);
-  //    if (!!(window.history && history.pushState)) {
-
-    /// window.location.href=lang;
-    //  window.history.replaceState( {} , "", window.location.pathname )
-    //  window.history.replaceState(  , "", window.location.pathname )
-    //this.routing.navigate([lang])
-      window.history.pushState(null, null, this.domain_en+lang);
-
-     // window.location.pathname.replace("content/wb-homeasas/","content/wb-home1/"+txt)
-     // }
-     //this.loading=false;
-   // window.history.replaceState( {} , "", window.location.pathname );
-   //window.location.pathname="";
-   // window.history.pushState("", "",lang);
-   this.loading=false;
- // }, 100);
-  
-  }
-getLangualge(path:any){
-  
-  let UrlPath=[];
-  //let language=['en','es','fr','ar','ru','zh','pt'];
-  debugger
-  if(this.runmode=="author"){
-    let urlSplit="";
-    let finalSplit=[]
-    urlSplit= path.split('content/wb-home/')[1]
-    let urlSplits = urlSplit.split('/');
-    let locales=window.location.pathname.split('content/wb-home/')[1]
-      let localeSplit = locales.split('/');
-    finalSplit=path.split('content/wb-home/'+urlSplits[0]);
-   // finalSplit = finalSplit[1].substring(finalSplit[1].lastIndexOf('/') + 1)
-    UrlPath.push({
-      locale:localeSplit[0],
-      path:finalSplit[1]});
-  }else{
-    let urlSplit=[];
-    let localeSplit=[];
-    urlSplit=path.split('/');
-    localeSplit=window.location.pathname.split('/');
-    let urlSplits = path.split(urlSplit[1]);
-    UrlPath.push({
-      locale:localeSplit[1],
-      path:urlSplits[1]});
-    //UrlPath = urlSplits[1];
-  }
-  
-  //  let strlang="";
-  //  UrlPath.forEach(element => {
-  //   if(element!=""){
-  //     if(language.indexOf(element)==-1){
-  //       strlang+=element+'/';
-  //      }
-  //   }
-  //  });
-  //  if(strlang!=""){
-  //   strlang = strlang.substring(0,strlang.length-1);
-  //  }
-   
-   return UrlPath;
-}
-
-
-getdetails(path:any){
-  
-  let UrlPath=[];
-  //let language=['en','es','fr','ar','ru','zh','pt'];
-  debugger
-  if(this.runmode=="author"){
-    let urlSplit="";
-    let finalSplit=[]
-    urlSplit= path.split('content/wb-home/')[1]
-    let urlSplits = urlSplit.split('/');
-    let locales=window.location.pathname.split('content/wb-home/')[1]
-      let localeSplit = locales.split('/');
-    finalSplit=path.split('content/wb-home/'+urlSplits[0]);
-    debugger
-  // let finalSplits = finalSplit[1].substring(finalSplit[1].lastIndexOf('/') + 1);
-   let localeSplits = finalSplit[1].split('.');
-   debugger
-    UrlPath.push({
-      locale:localeSplit[0],
-      path:localeSplits[0]});
-  }else{
-    let urlSplit=[];
-    let localeSplit=[];
-    urlSplit=path.split('/');
-    localeSplit=window.location.pathname.split('/');
-    let urlSplits = path.split(urlSplit[1]);
-    UrlPath.push({
-      locale:localeSplit[1],
-      path:urlSplits[1]});
-    //UrlPath = urlSplits[1];
-  }
-  
-  //  let strlang="";
-  //  UrlPath.forEach(element => {
-  //   if(element!=""){
-  //     if(language.indexOf(element)==-1){
-  //       strlang+=element+'/';
-  //      }
-  //   }
-  //  });
-  //  if(strlang!=""){
-  //   strlang = strlang.substring(0,strlang.length-1);
-  //  }
-   
-   return UrlPath;
-}
-
-load(){
-  this.clear();
-  let summarydetails="";
  
-
+   let qterm=this.getQterm();
+let search="";
+   if(qterm!=""){
+      search="?searchTerm="+qterm;
+   }
+    
+   let lang:any;
+   let domain = "";
+  if(this.runmode=="author"){
+      lang = "content/wb-home/"+txt+details;
+      domain= this.domain("author");
+  }else{
+      lang=txt+details;
+      domain= this.domain(txt);
+  }
+    // console.log(this.domain_en+lang);
+    // setTimeout(() => {
+    //   console.log(this.domain_en+lang);
+      window.location.href= domain+lang;
+    //}, 500);
+    
+  }
+domain(domain){
+  
+  let localedomain="";
+  switch (domain) {
+    case "es":
+      localedomain = this.domain_es;
+        break;
+    case "en":
+      localedomain = this.domain_en;
+        break;
+    case "fr":
+      localedomain = this.domain_fr;
+       break;
+    case "ar":
+      localedomain = this.domain_ar;
+       break;
+     case "pt":
+      localedomain = this.domain_pt;
+       break;
+       case "zh":
+      localedomain = this.domain_zh;
+       break;
+      case "ru":
+      localedomain = this.domain_ru;
+       break;
+       case "author":
+      localedomain = this.domain_author;
+       break;
+     default:
+      localedomain = this.domain_en;
+      break;
+  }
+return localedomain
+}
+load(){
+ debugger
   let parameters = location.search.substring(1);  
     let qterm="";      
     if (parameters.indexOf('searchTerm=') != -1) {
@@ -839,61 +829,70 @@ load(){
       //  parameters = this.removeURLParameter(parameters, 'searchTerm');
        // parameters = (parameters == '' ? parameters : parameters + '&') + 'qterm=' + (qterm == null ? '' : qterm);
     }  
-  if(window.location.pathname.indexOf(this.summary_routing)!=-1){
-    
+  if(window.location.pathname.indexOf("projectdetail-spa")!=-1){
+    this.dropList="1";
     this.isprojdetails=true;
      $('#summary_top').addClass('active');
      if(this.routing.config!=undefined){
       this.routing.navigate([this.routing.config[0].path]);
     }
    }
-   if(window.location.pathname.indexOf(this.procurement_routing)!=-1){
+   if(window.location.pathname.indexOf("project-procurement")!=-1){
+    this.dropList="2";
     this.isprojdetails=true;
     if(this.routing.config!=undefined){
       this.routing.navigate([this.routing.config[1].path]);
     }
      $('#procurement_top').addClass('active');
    }
-   if(window.location.pathname.indexOf(this.document_routing)!=-1){
+   if(window.location.pathname.indexOf("document-detail")!=-1){
+    this.dropList="3";
     this.isprojdetails=true;
     if(this.routing.config!=undefined){
       this.routing.navigate([this.routing.config[2].path]);
     }
      $('#documents_top').addClass('active');
    }
-   if(window.location.pathname.indexOf(this.newsmedia_routing)!=-1){
+   if(window.location.pathname.indexOf("news-media")!=-1){
+    this.dropList="4";
     this.isprojdetails=true;
     if(this.routing.config!=undefined){
       this.routing.navigate([this.routing.config[3].path]);
     }
      $('#news_top').addClass('active');
    }
-   if(window.location.pathname.indexOf(this.photogallery_routing)!=-1){
+   if(window.location.pathname.indexOf("photo-gallery")!=-1){
+    this.dropList="5";
     this.isprojdetails=true;
+    $('#photo_top').addClass('active');
     if(this.routing.config!=undefined){
       this.routing.navigate([this.routing.config[4].path]);
     }
-     $('#photo_top').addClass('active');
+    
    }
-
+ 
   if(window.location.pathname.indexOf('projects-summary')!=-1){
-    this.isprojdetails=false;
+   this.isprojdetails=false;
     $('#projectsummary').addClass('active');
+    if(this.isBack){
+      window.location.href=this.domain_en+this.routing.config[5].path
+    }
     this.getSummarylist(qterm,""); 
   }
   if(window.location.pathname.indexOf('projects-list')!=-1){
-    this.isprojdetails=false;
+   this.isprojdetails=false;
     $('#projectslist').addClass('active');
      this.getProjectlist(qterm,"");
   }
+  this.clear();
 }
-  navigationRouting(params,event:any){
+  navigationRouting(params,event:any,isMobil){
     
     $('#wrap ul li a').removeClass('active');
     setTimeout(()=>{
       event.srcElement.classList.add("active");
     },0)
-   debugger
+   
     let parameters = location.search.substring(1);  
     let qterm="";      
     let lang:any;
@@ -948,8 +947,33 @@ load(){
     }
     return qterm
   }
+  droplists(){
+    
+    if(this.dropList=="1"){
+      if(this.routing.config!=undefined){
+        this.routing.navigate([this.routing.config[0].path]);
+      }
+    }else if(this.dropList=="2"){
+      if(this.routing.config!=undefined){
+        this.routing.navigate([this.routing.config[1].path]);
+      }
+    }else if(this.dropList=="3"){
+      if(this.routing.config!=undefined){
+        this.routing.navigate([this.routing.config[2].path]);
+      }
+      
+    }else if(this.dropList=="4"){
+      if(this.routing.config!=undefined){
+        this.routing.navigate([this.routing.config[3].path]);
+      }
+    }else if(this.dropList=="5"){
+      if(this.routing.config!=undefined){
+        this.routing.navigate([this.routing.config[4].path]);
+      }
+    }
+  }
   getSummarylist(search,txt){
-    debugger
+    
     let qterm=this.getQterm();
     let searchText="";
     if(search!=""){
@@ -961,19 +985,12 @@ load(){
         searchText =qterm;
       }
     }
-    let lang:any;
-    
-    let summarydetails="";
-    if(this.runmode=='author'){
-      lang = "content/wb-home/";
-      //summarydetails = '.'+this.summary_projectCode+'.html';
+    let domain = "";
+    if(this.runmode=="author"){
+        domain= this.domain("author");
     }else{
-      lang="";
-      //summarydetails = '/'+this.summary_projectCode;
+        domain= this.domain(this.summary_locale);
     }
-    let response =""
-     //let summaryPath=this.getLangualge(this.summary_routing);
-    
     let objProject={
       searchTerm:searchText,
       list_summary_apiUrl:  this.list_summary_apiUrl,
@@ -981,25 +998,36 @@ load(){
     list_summary_projectDetailsPath:this.list_summary_projectDetailsPath ,
     list_summary_mapPath:this.list_summary_mapPath ,
     list_summary_ctryCode:this.list_summary_ctryCode, 
+    list_project_list_api:this.list_project_list_api,
     list_summary_sectorCode:this.list_summary_sectorCode, 
     list_summary_regionName:this.list_summary_regionName,
     summary_locale :this.summary_locale,
     summary_routing:this.summary_routing,
+    summary_imagePath:this.summary_imagePath,
     projectlist_routing:this.list_routing,
-    response:response
+    response:"",
+    back:this.isBack,
+    domain:domain
     }
     //let path = lang+this.summary_locale+listSummaryPath[0].path;
-    if(searchText!=""){
-    this.routing.navigate([this.list_summary_routing], { queryParams: { searchTerm: searchText  }});
+    
+    if(this.isBack){
+      window.location.href=domain+this.list_summary_routing
     }else{
-      this.routing.navigate([this.list_summary_routing]);
-     
+      if(searchText!=""){
+        this.routing.navigate([this.list_summary_routing], { queryParams: { searchTerm: searchText  }});
+        }else{
+          this.routing.navigate([this.list_summary_routing]);
+         
+        }
     }
-    this.isprojdetails=false;
-    this.commonservice.closingStatusallUpdated(objProject);
+    
+    
+    //this.isprojdetails=false;
+ this.commonservice.closingStatusallUpdated(objProject);
   }
 getProjectlist(search,txt){
-  debugger
+  
   let qterm=this.getQterm();
   let searchText="";
     if(search!=""){
@@ -1016,15 +1044,14 @@ getProjectlist(search,txt){
   let obj={
     searchTerm:this.txtSearch,
     summary_locale:this.summary_locale,
-    list_project_list_api:this.list_project_list_api
+    list_project_list_api:this.list_project_list_api,
+    summary_imagePath:this.summary_imagePath
   }
   if(searchText!=""){
     this.routing.navigate([this.list_routing], { queryParams: { searchTerm: searchText  }});
     }else{
       this.routing.navigate([this.list_routing]);
     }
- 
- 
   this.commonservice.updateSearchResults(obj);
 }
   public getParameterByName(name, url) {	    
@@ -1055,6 +1082,38 @@ getProjectlist(search,txt){
   $('#photo_top').removeClass('active');
   $('#projectsummary').removeClass('active');
   $('#projectslist').removeClass('active');
+    
+  setTimeout(() => {
+    $('#summary_top').removeClass('active');
+  $('#procurement_top').removeClass('active');
+  $('#documents_top').removeClass('active');
+  $('#news_top').removeClass('active');
+  $('#photo_top').removeClass('active');
+  $('#projectsummary').removeClass('active');
+  $('#projectslist').removeClass('active');
+    
+     if(window.location.pathname.indexOf("project-procurement")!=-1){
+      $('#procurement_top').addClass('active');
+     }
+     if(window.location.pathname.indexOf("news-media")!=-1){
+      $('#news_top').addClass('active');
+     }
+     if(window.location.pathname.indexOf("document-detail")!=-1){
+      $('#documents_top').addClass('active');
+     }
+     if(window.location.pathname.indexOf("projectdetail-spa")!=-1){
+      $('#summary_top').addClass('active');
+     }
+     if(window.location.pathname.indexOf("photo-gallery")!=-1){
+      $('#photo_top').addClass('active');
+     }
+     if(window.location.pathname.indexOf('projects-summary')!=-1){
+      $('#projectsummary').addClass('active');
+     }
+     if(window.location.pathname.indexOf('projects-list')!=-1){
+      $('#projectslist').addClass('active');
+     }
+  }, 1000);
   
  }
   
